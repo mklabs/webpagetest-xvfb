@@ -1,0 +1,9 @@
+- name: be sure iptables is replaced
+  template: >
+    src=iptables.j2
+    dest=/etc/sysconfig/iptables
+
+- name: be sure iptables is restarted
+  service: >
+    name=iptables
+    state=restarted

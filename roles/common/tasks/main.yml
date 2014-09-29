@@ -1,0 +1,5 @@
+- include: selinux.yml
+- include: yum.yml
+- include: php.yml
+- include: httpd.yml
+- include: iptables.yml

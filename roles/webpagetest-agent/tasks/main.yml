@@ -1,0 +1,61 @@
+- name: Ensure EPEL repo is installed
+  get_url: url=http://dl.fedoraproject.org/pub/epel/6/i386/epel-release-6-8.noarch.rpm dest=/tmp/epel-release-6-8.noarch.rpm
+
+- name: Ensure EPEL repo is installed
+  ignore_errors: yes
+  command: rpm -Uvh /tmp/epel-release-6-8.noarch.rpm
+
+- name: be sure yum packages are installed
+  yum: >
+    name={{ item }}
+    state=present
+  with_items:
+    - git
+    - nodejs
+    - npm
+
+- name: Checkout webpagetest repo
+  git: repo=https://github.com/WPO-Foundation/webpagetest.git
+       dest=/opt/webpagetest
+
+- name: Ensure correct ownership webpagetest repo
+  command: chown -R {{ user }}:{{ user }} /opt/webpagetest
+
+- name: Install Chrome - Download Richard Lloyd script
+  get_url: url=http://chrome.richardlloyd.org.uk/install_chrome.sh dest=/tmp/install_chrome.sh
+
+- name: Install Chrome - ensure script is executable
+  command: chmod +x /tmp/install_chrome.sh
+
+- name: Install Chrome - exec script
+  command: /tmp/install_chrome.sh -f creates=/usr/bin/google-chrome
+  sudo: yes
+
+- name: Install Chrome - exec script
+  command: ln -s /usr/bin/google-chrome /usr/bin/chrome
+  sudo: yes
+
+- name: Install Xvfb
+  yum: name=Xvfb state=present
+
+- name: Copy Xvfb init.d script
+  template: src=xvfb-init.d.j2 dest=/etc/init.d/xvfb
+
+- name: Xvfb init.d script - ensure script is executable
+  command: chmod +x /etc/init.d/xvfb
+
+- name: Ensure Xvfb is started
+  service: name=xvfb state=started
+
+- name: Copy locations.ini
+  template: src=locations.ini.j2 dest=/var/www/webpagetest/settings/locations.ini owner=apache group=apache
+
+- name: Copy agent init.d script
+  template: src=agent-init.d.j2 dest=/etc/init.d/webpagetest-agent
+
+- name: webpagetest-agenet init.d script - ensure script is executable
+  command: chmod +x /etc/init.d/webpagetest-agent
+
+- name: Ensure agent is started
+  service: name=webpagetest-agent state=started
+

@@ -1,0 +1,13 @@
+- name: download webpagetest
+  get_url: >
+    url=https://github.com/WPO-Foundation/webpagetest/releases/download/WebPagetest-{{ wpt_version }}/webpagetest_{{ wpt_version }}.zip
+    dest=/tmp/webpagetest_{{ wpt_version }}.zip
+
+- name: extract chromedriver from archive
+  command: unzip -o /tmp/webpagetest_{{ wpt_version }}.zip -d /tmp/webpagetest_{{ wpt_version }}
+
+- name: copy www directory
+  shell: cp -r /tmp/webpagetest_{{ wpt_version }}/www/* /var/www/webpagetest/
+
+- name: Ensure apache writable
+  command: chown -R apache:apache /var/www/webpagetest

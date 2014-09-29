@@ -1,0 +1,11 @@
+- hosts: webpagetest-private
+  sudo: yes
+  vars:
+    host_name: 192.168.33.33
+    port_no: 8080
+    wpt_version: 2.15
+    user: vagrant
+  roles:
+    - common
+    - webpagetest
+    - webpagetest-agent
