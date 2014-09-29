@@ -29,11 +29,9 @@
 
 - name: Install Chrome - exec script
   command: /tmp/install_chrome.sh -f creates=/usr/bin/google-chrome
-  sudo: yes
 
 - name: Install Chrome - exec script
-  command: ln -s /usr/bin/google-chrome /usr/bin/chrome
-  sudo: yes
+  command: ln -s /usr/bin/google-chrome /usr/bin/chrome creates=/usr/bin/chrome
 
 - name: Install Xvfb
   yum: name=Xvfb state=present
@@ -53,9 +51,9 @@
 - name: Copy agent init.d script
   template: src=agent-init.d.j2 dest=/etc/init.d/webpagetest-agent
 
-- name: webpagetest-agenet init.d script - ensure script is executable
+- name: webpagetest-agent init.d script - ensure script is executable
   command: chmod +x /etc/init.d/webpagetest-agent
 
 - name: Ensure agent is started
-  service: name=webpagetest-agent state=started
+  service: name=webpagetest-agent pattern="node src/agent_main" state=started
 

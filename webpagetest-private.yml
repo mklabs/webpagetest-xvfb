@@ -1,10 +1,10 @@
 - hosts: webpagetest-private
   sudo: yes
   vars:
-    host_name: 192.168.33.33
+    host_name: dc1-se-prod-kkspeed-02.prod.dc1.kelkoo.net
     port_no: 8080
     wpt_version: 2.15
-    user: vagrant
+    user: kookel
   roles:
     - common
     - webpagetest

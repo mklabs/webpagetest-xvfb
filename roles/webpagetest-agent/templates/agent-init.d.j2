@@ -13,12 +13,12 @@ USER="{{ user }}"
 DAEMON="/usr/bin/node"
 ROOT_DIR="/opt/webpagetest/agent/js"
 
-LOG_FILE="$ROOT_DIR/agent.log"
+LOG_FILE_CHROME="$ROOT_DIR/agent.log"
 
 do_start()
 {
-        echo -n $"Starting agent: "
-        runuser -l "$USER" -c "DISPLAY=:99 $ROOT_DIR/wptdriver.sh -s http://{{ host_name }}:{{ port_no }} -l Chrome -m debug >>$LOG_FILE 2>&1 &" && echo_success || echo_failure
+        echo -n $"Starting chrome agent: "
+        runuser -l "$USER" -c "DISPLAY=:99 $ROOT_DIR/wptdriver.sh -s http://{{ host_name }}:{{ port_no }} -l Chrome -m debug >>$LOG_FILE_CHROME 2>&1 &" && echo_success || echo_failure
         RETVAL=$?
         echo
 }
